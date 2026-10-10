@@ -123,6 +123,20 @@
     window.open(`https://wa.me/${WA}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
   });
 
+  // Hero loop fades in over the still once it is actually playing (Low Power Mode keeps the still)
+  const hv = document.querySelector(".hero__video");
+  if (hv) {
+    const on = () => hv.classList.add("is-playing");
+    hv.addEventListener("playing", on);
+    if (!hv.paused) on();
+    else hv.play().catch(() => {
+      // Blocked (e.g. iPhone Low Power Mode): start on the first tap or click anywhere
+      const kick = () => hv.play().then(on).catch(() => {});
+      ["touchend", "click", "keydown"].forEach((ev) => document.addEventListener(ev, kick, { once: true, passive: true }));
+    });
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { hv.pause(); hv.remove(); }
+  }
+
   const y = document.querySelector("[data-year]");
   if (y) y.textContent = new Date().getFullYear();
 
