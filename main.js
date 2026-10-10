@@ -123,17 +123,6 @@
     window.open(`https://wa.me/${WA}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
   });
 
-  // Film: poster first, YouTube loads only when someone presses play
-  const filmBtn = document.querySelector("[data-video]");
-  if (filmBtn) filmBtn.addEventListener("click", () => {
-    const f = document.createElement("iframe");
-    f.src = `https://www.youtube-nocookie.com/embed/${filmBtn.dataset.video}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
-    f.title = "Bhramari, the farm stay: film by Sanjith Seetharam";
-    f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-    f.allowFullscreen = true;
-    filmBtn.replaceWith(f);
-  });
-
   const y = document.querySelector("[data-year]");
   if (y) y.textContent = new Date().getFullYear();
 
