@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://thecozycod3r.github.io/bhramari/sitemap.xml
