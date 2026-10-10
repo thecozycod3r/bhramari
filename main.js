@@ -123,6 +123,17 @@
     window.open(`https://wa.me/${WA}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
   });
 
+  // Film: poster first, YouTube loads only when someone presses play
+  const filmBtn = document.querySelector("[data-video]");
+  if (filmBtn) filmBtn.addEventListener("click", () => {
+    const f = document.createElement("iframe");
+    f.src = `https://www.youtube-nocookie.com/embed/${filmBtn.dataset.video}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    f.title = "Bhramari, the farm stay: film by Sanjith Seetharam";
+    f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    f.allowFullscreen = true;
+    filmBtn.replaceWith(f);
+  });
+
   const y = document.querySelector("[data-year]");
   if (y) y.textContent = new Date().getFullYear();
 
@@ -179,7 +190,7 @@
   });
 
   // Photos unmask upward while the image inside settles
-  gsap.utils.toArray(".intro__img, .table__img, .mosaic figure, .duo figure, .find__map").forEach((fig) => {
+  gsap.utils.toArray(".intro__img, .table__img, .mosaic figure, .duo figure, .find__map, .film__frame").forEach((fig) => {
     const img = fig.querySelector("img");
     const tl = gsap.timeline({ scrollTrigger: inView(fig, "top 88%") });
     tl.fromTo(fig, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "power4.inOut" });
