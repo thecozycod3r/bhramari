@@ -12,12 +12,6 @@
   let lenis = null;
   if (motion) {
     gsap.registerPlugin(ScrollTrigger);
-    if (window.Lenis) {
-      lenis = new Lenis({ duration: 1.15, smoothWheel: true });
-      lenis.on("scroll", ScrollTrigger.update);
-      gsap.ticker.add((t) => lenis.raf(t * 1000));
-      gsap.ticker.lagSmoothing(0);
-    }
   }
   const lockScroll = (on) => {
     document.body.style.overflow = on ? "hidden" : "";
@@ -204,12 +198,12 @@
   // Facts bar
   gsap.from(".facts__list li", { y: 24, opacity: 0, duration: 0.9, stagger: 0.1, ease, scrollTrigger: inView(".facts", "top 92%") });
 
-  // Pool: the frame holds while the photo opens out to full bleed
+  // Pool: the photo opens out to full bleed as it scrolls into view (no pinning)
   const poolImg = document.querySelector("[data-pool-img] img");
   gsap.fromTo(poolImg,
     { clipPath: "inset(16% 20% 16% 20%)", scale: 1.18 },
     { clipPath: "inset(0% 0% 0% 0%)", scale: 1, ease: "none",
-      scrollTrigger: { trigger: "[data-pool-img]", start: "top top", end: "+=85%", scrub: 0.6, pin: true, anticipatePin: 1 } });
+      scrollTrigger: { trigger: "[data-pool-img]", start: "top 85%", end: "center center", scrub: 0.4 } });
 
   // Parallax on the big landscape photos
   [[".estate__img img", ".estate__img"], [".stay__bg", ".stay"]].forEach(([img, trig]) => {
