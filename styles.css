@@ -374,3 +374,8 @@ section[id] { scroll-margin-top: 64px; }
   .grid:hover button img { opacity: .78; }
   .grid button:hover img { opacity: 1; }
 }
+
+/* rate */
+.rate { display: grid; gap: 2px; margin-bottom: 1.2em; }
+.rate__num { font: 400 clamp(2.4rem, 4.4vw, 3.4rem)/1 var(--serif); color: var(--cream); }
+.rate__per { font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: #e9b892; }
