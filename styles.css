@@ -411,8 +411,11 @@ section[id] { scroll-margin-top: 64px; }
 .film__credit a:hover { border-color: var(--cream); }
 
 /* hero video loop */
-.hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s var(--ease); }
-.hero__video.is-playing { opacity: 1; }
+/* The video sits under the still and stays fully "visible" to the browser: Safari refuses to
+   autoplay a transparent video. Once it is actually playing, the still on top fades away. */
+.hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.hero picture img { z-index: 1; transition: opacity 1.2s var(--ease); }
+.hero picture.is-playing img { opacity: 0; }
 
 /* ---------- UX pass (10 Oct) ---------- */
 /* 1. floating WhatsApp steps aside */

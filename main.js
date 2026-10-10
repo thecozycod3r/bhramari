@@ -132,14 +132,19 @@
     if (skip) hv.remove();
     else {
       let inView = true;
-      const on = () => hv.classList.add("is-playing");
+      const on = () => { hv.classList.add("is-playing"); hv.parentElement.classList.add("is-playing"); };
       const play = () => { if (hv.src && inView && !document.hidden) hv.play().catch(() => {}); };
       hv.addEventListener("playing", on);
       const pick = () =>
         matchMedia("(orientation: portrait) and (max-width: 900px)").matches ? hv.dataset.portrait
         : matchMedia("(max-width: 1100px)").matches ? hv.dataset.sm : hv.dataset.lg;
       const start = () => {
+        // Safari/iOS ignores a play() issued in the same tick as a src change on a preload="none"
+        // element, so mark it autoplay, load explicitly, and retry once data is ready.
+        hv.autoplay = true;
         hv.src = pick();
+        hv.load();
+        hv.addEventListener("canplay", play, { once: true });
         hv.play().then(on).catch(() => {
           // Blocked (e.g. iPhone Low Power Mode): start on the first tap or click anywhere
           const kick = () => hv.play().then(on).catch(() => {});
