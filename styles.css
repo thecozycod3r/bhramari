@@ -413,3 +413,32 @@ section[id] { scroll-margin-top: 64px; }
 /* hero video loop */
 .hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s var(--ease); }
 .hero__video.is-playing { opacity: 1; }
+
+/* ---------- UX pass (10 Oct) ---------- */
+/* 1. floating WhatsApp steps aside */
+.float-wa { transition: transform .45s var(--ease), opacity .3s; }
+.float-wa.is-away { transform: translateY(140%); opacity: 0; pointer-events: none; }
+
+/* 2. phone readability: one weight heavier, darker secondary text */
+@media (max-width: 860px) {
+  body { font-weight: 400; font-size: 16.5px; line-height: 1.68; }
+  .rail__item span, .facts__list span, .form__hint, .film__credit { color: #4f5046; }
+  .estate p, .stay__text p { color: rgba(245, 239, 228, .92); }
+  .film__credit { color: rgba(245, 239, 228, .75); }
+  .table__list li { padding-block: 12px; }
+}
+
+/* 4. bigger small print and tap targets */
+.film__credit { font-size: .9rem; }
+.mosaic figcaption { font-size: .8rem; }
+.rate__per { font-size: .84rem; }
+.hero__scroll { font-size: .74rem; }
+.foot__small { font-size: .85rem; }
+.foot p a, .film__credit a { display: inline-block; padding-block: 10px; margin-block: -10px; }
+.foot p { line-height: 2.2; }
+.stay__contact a { padding-block: 6px; }
+
+/* desktop: menu links readable over the video */
+.nav__links a { opacity: 1; font-size: .82rem; text-shadow: 0 1px 10px rgba(0,0,0,.45); }
+.nav.is-solid .nav__links a { text-shadow: none; opacity: .9; }
+.watermark { color: rgba(245, 239, 228, .09); }

@@ -153,6 +153,20 @@
     }
   }
 
+  // Floating WhatsApp: hides while scrolling down (reading) and near the enquiry form/footer,
+  // returns when scrolling up, so it never sits on top of text or form fields
+  const fab = document.querySelector(".float-wa");
+  if (fab) {
+    let nearForm = false, down = false, fy = window.scrollY;
+    const sync = () => fab.classList.toggle("is-away", nearForm || down || !menu.hidden);
+    new IntersectionObserver((es) => { nearForm = es.some((e) => e.isIntersecting); sync(); }, { rootMargin: "0px 0px -20% 0px" })
+      .observe(document.querySelector("#stay"));
+    window.addEventListener("scroll", () => {
+      const y2 = window.scrollY;
+      if (Math.abs(y2 - fy) > 6) { down = y2 > fy && y2 > window.innerHeight * 0.5; fy = y2; sync(); }
+    }, { passive: true });
+  }
+
   const y = document.querySelector("[data-year]");
   if (y) y.textContent = new Date().getFullYear();
 
@@ -167,11 +181,12 @@
   const seen = (() => { try { return sessionStorage.getItem("bh-intro") === "1"; } catch { return false; } })();
   try { sessionStorage.setItem("bh-intro", "1"); } catch {}
   const intro = gsap.timeline({ defaults: { ease } });
-  if (!seen && window.scrollY < 50) {
+  const phone = matchMedia("(max-width: 860px)").matches;
+  if (!seen && !phone && window.scrollY < 50) {
     lockScroll(true);
     intro
-      .to(".loader img", { clipPath: "inset(0 0% 0 0)", duration: 1.5, ease: "power2.inOut" })
-      .to(".loader", { yPercent: -100, duration: 1.1, ease: "power4.inOut" }, "+=.2")
+      .to(".loader img", { clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: "power2.inOut" })
+      .to(".loader", { yPercent: -100, duration: 0.8, ease: "power4.inOut" }, "+=.1")
       .call(() => lockScroll(false));
   } else {
     gsap.set(".loader", { display: "none" });
