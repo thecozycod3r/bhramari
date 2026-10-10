@@ -17,9 +17,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&family=Sacramento&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/hero-1800.webp" imagesrcset="img/hero-900.webp 900w, img/hero-1800.webp 1800w" imagesizes="100vw">
 <link rel="stylesheet" href="styles.css">
+<script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("anim");</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -49,6 +50,7 @@
 </script>
 </head>
 <body>
+<div class="loader" aria-hidden="true"><img src="img/logo-cream.png" alt="" width="960" height="364"></div>
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="nav" data-nav>
@@ -189,7 +191,7 @@
 </section>
 
 <section class="pool" id="pool">
-  <figure class="pool__img">
+  <figure class="pool__img" data-pool-img>
     <img src="img/pool-dusk-1800.webp" srcset="img/pool-dusk-900.webp 900w, img/pool-dusk-1800.webp 1800w" sizes="100vw" alt="The private pool at dusk, lit from within, with the gazebo and trees beyond" width="1800" height="1200" loading="lazy">
   </figure>
   <div class="pool__card reveal">
@@ -231,6 +233,7 @@
 </section>
 
 <section class="estate" id="estate">
+  <span class="watermark" aria-hidden="true">Sakleshpur</span>
   <figure class="estate__img">
     <img src="img/aerial-1800.webp" srcset="img/aerial-900.webp 900w, img/aerial-1800.webp 1800w" sizes="100vw" alt="Aerial view of the villa's tiled roofs and blue pool set in thick green forest" width="1800" height="1013" loading="lazy">
   </figure>
@@ -344,6 +347,9 @@
   <button class="lightbox__nav lightbox__next" type="button" data-lb-next aria-label="Next photo">›</button>
 </dialog>
 
+<script src="vendor/gsap.min.js" defer></script>
+<script src="vendor/ScrollTrigger.min.js" defer></script>
+<script src="vendor/lenis.min.js" defer></script>
 <script src="main.js" defer></script>
 </body>
 </html>

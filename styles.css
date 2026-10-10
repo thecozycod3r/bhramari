@@ -10,6 +10,7 @@
   --terra-d: #8c4122;
   --line: rgba(42, 43, 36, .14);
   --serif: "Cormorant Garamond", Georgia, serif;
+  --script: "Sacramento", "Segoe Script", cursive;
   --sans: "Jost", "Helvetica Neue", Arial, sans-serif;
   --wrap: 1180px;
   --gut: clamp(16px, 4vw, 40px);
@@ -278,9 +279,6 @@ address { font-style: normal; font: 400 1.35rem/1.5 var(--serif); margin-bottom:
 .lightbox.is-single .lightbox__nav { display: none; }
 
 /* reveal */
-.reveal { opacity: 0; transform: translateY(26px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
-.reveal.is-in { opacity: 1; transform: none; }
-.no-js .reveal { opacity: 1; transform: none; }
 
 /* responsive */
 @media (max-width: 860px) {
@@ -304,7 +302,75 @@ address { font-style: normal; font: 400 1.35rem/1.5 var(--serif); margin-bottom:
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; }
 }
 
 section[id] { scroll-margin-top: 64px; }
+
+
+/* ---------- script accents (matches the logo's monoline hand) ---------- */
+.eyebrow {
+  font: 400 clamp(2.3rem, 3.6vw, 3rem)/1 var(--script);
+  letter-spacing: 0; text-transform: none;
+  color: var(--terra); margin: 0 0 .15em -.04em;
+}
+.eyebrow--light, .estate .eyebrow { color: #e9b892; }
+.watermark {
+  position: absolute; right: -2vw; bottom: 6%;
+  font: 400 clamp(7rem, 19vw, 17rem)/1 var(--script);
+  color: rgba(245, 239, 228, .06); white-space: nowrap; pointer-events: none; user-select: none;
+}
+.estate { position: relative; overflow: hidden; }
+.estate .wrap { position: relative; }
+.hero__line { font-family: var(--script); font-style: normal; font-size: clamp(1.9rem, 3.6vw, 2.7rem); letter-spacing: .01em; }
+
+/* ---------- loader ---------- */
+.loader { display: none; }
+.anim .loader {
+  display: grid; place-items: center;
+  position: fixed; inset: 0; z-index: 200; background: var(--forest-2);
+}
+.loader img { width: min(380px, 64vw); clip-path: inset(0 100% 0 0); }
+
+/* ---------- motion hooks (only when JS + motion are on) ---------- */
+.anim .hero picture img, .anim .hero__logo, .anim .hero__line, .anim .hero__ctas { animation: none; }
+.anim .hero__logo, .anim .hero__line, .anim .hero__ctas, .anim .hero__scroll { opacity: 0; }
+.split-line { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .1em; margin-bottom: -.1em; }
+.split-line > span { display: inline-block; will-change: transform; }
+
+/* nav hides on the way down, returns on the way up */
+.nav { transition: background .35s var(--ease), height .35s var(--ease), box-shadow .35s, transform .45s var(--ease); }
+.nav.is-hidden { transform: translateY(-100%); }
+
+/* buttons: fill sweeps in from the left */
+.btn { position: relative; overflow: hidden; isolation: isolate; }
+.btn::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: var(--terra-d); transform: scaleX(0); transform-origin: right;
+  transition: transform .55s var(--ease);
+}
+.btn:hover::before { transform: scaleX(1); transform-origin: left; }
+.btn:hover { background: var(--terra); }
+.btn--ghost::before { background: rgba(255,255,255,.14); }
+.btn--ghost:hover { background: transparent; }
+.btn--line::before { background: var(--ink); }
+.btn--line:hover { background: transparent; color: var(--cream); }
+
+.estate__img { overflow: hidden; }
+/* pool: pinned image opens out to full bleed */
+.pool__img { overflow: hidden; }
+.pool__img img { will-change: clip-path, transform; }
+
+/* figures used for clip reveals */
+.intro__img, .table__img, .duo figure, .mosaic figure { overflow: hidden; }
+
+/* lightbox fades instead of snapping */
+.lightbox[open] { animation: lb-in .35s var(--ease); }
+.lightbox[open] img { animation: lb-img .5s var(--ease); }
+@keyframes lb-in { from { opacity: 0; } }
+@keyframes lb-img { from { opacity: 0; transform: scale(.97); } }
+
+/* gallery hover: lift + slight dim of siblings */
+@media (hover: hover) {
+  .grid:hover button img { opacity: .78; }
+  .grid button:hover img { opacity: 1; }
+}
