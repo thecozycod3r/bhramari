@@ -129,6 +129,27 @@
   if (hv) {
     const net = navigator.connection || {};
     const skip = matchMedia("(prefers-reduced-motion: reduce)").matches || net.saveData || /2g|3g/.test(net.effectiveType || "");
+    // ?debug shows on-screen why the hero video is or isn't playing (for testing on real phones)
+    if (/debug/.test(location.search)) {
+      const box = document.createElement("pre");
+      box.style.cssText = "position:fixed;left:8px;right:8px;bottom:8px;z-index:999;margin:0;padding:10px;background:rgba(0,0,0,.85);color:#9f9;font:12px/1.4 monospace;white-space:pre-wrap;pointer-events:none";
+      document.body.appendChild(box);
+      const errs = [];
+      const op = hv.play.bind(hv);
+      hv.play = () => op().catch((e) => { errs.push(e.name); throw e; });
+      setInterval(() => {
+        box.textContent = [
+          "reduce-motion: " + matchMedia("(prefers-reduced-motion: reduce)").matches,
+          "save-data: " + !!net.saveData + "  net: " + (net.effectiveType || "n/a"),
+          "skipped: " + !!skip + "  in-page: " + document.body.contains(hv),
+          "src: " + (hv.currentSrc || hv.src || "none").split("/").pop(),
+          "readyState: " + hv.readyState + "  network: " + hv.networkState + "  error: " + (hv.error ? hv.error.code : "none"),
+          "paused: " + hv.paused + "  time: " + hv.currentTime.toFixed(1),
+          "play errors: " + (errs.join(", ") || "none"),
+          navigator.userAgent.slice(0, 90),
+        ].join("\n");
+      }, 500);
+    }
     if (skip) hv.remove();
     else {
       let inView = true;
