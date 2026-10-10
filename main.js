@@ -123,18 +123,34 @@
     window.open(`https://wa.me/${WA}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
   });
 
-  // Hero loop fades in over the still once it is actually playing (Low Power Mode keeps the still)
+  // Hero loop: the still shows first; the video loads after the page, in the shape that fits the screen,
+  // and never on Data Saver, slow connections or reduced motion. It fades in once it is really playing.
   const hv = document.querySelector(".hero__video");
   if (hv) {
-    const on = () => hv.classList.add("is-playing");
-    hv.addEventListener("playing", on);
-    if (!hv.paused) on();
-    else hv.play().catch(() => {
-      // Blocked (e.g. iPhone Low Power Mode): start on the first tap or click anywhere
-      const kick = () => hv.play().then(on).catch(() => {});
-      ["touchend", "click", "keydown"].forEach((ev) => document.addEventListener(ev, kick, { once: true, passive: true }));
-    });
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { hv.pause(); hv.remove(); }
+    const net = navigator.connection || {};
+    const skip = matchMedia("(prefers-reduced-motion: reduce)").matches || net.saveData || /2g|3g/.test(net.effectiveType || "");
+    if (skip) hv.remove();
+    else {
+      let inView = true;
+      const on = () => hv.classList.add("is-playing");
+      const play = () => { if (hv.src && inView && !document.hidden) hv.play().catch(() => {}); };
+      hv.addEventListener("playing", on);
+      const pick = () =>
+        matchMedia("(orientation: portrait) and (max-width: 900px)").matches ? hv.dataset.portrait
+        : matchMedia("(max-width: 1100px)").matches ? hv.dataset.sm : hv.dataset.lg;
+      const start = () => {
+        hv.src = pick();
+        hv.play().then(on).catch(() => {
+          // Blocked (e.g. iPhone Low Power Mode): start on the first tap or click anywhere
+          const kick = () => hv.play().then(on).catch(() => {});
+          ["touchend", "click", "keydown"].forEach((ev) => document.addEventListener(ev, kick, { once: true, passive: true }));
+        });
+      };
+      if (document.readyState === "complete") start(); else window.addEventListener("load", start, { once: true });
+      // Pause when the hero is off screen or the tab is hidden; saves battery and data
+      new IntersectionObserver(([e]) => { inView = e.isIntersecting; inView ? play() : hv.pause(); }).observe(hv);
+      document.addEventListener("visibilitychange", () => (document.hidden ? hv.pause() : play()));
+    }
   }
 
   const y = document.querySelector("[data-year]");
