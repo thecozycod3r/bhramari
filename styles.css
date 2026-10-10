@@ -407,3 +407,5 @@ section[id] { scroll-margin-top: 64px; }
 .film__credit { margin: 16px 0 0; font-size: .82rem; letter-spacing: .1em; color: rgba(245, 239, 228, .6); }
 @keyframes ring { from { transform: scale(1); opacity: .8; } to { transform: scale(1.6); opacity: 0; } }
 @media (max-width: 860px) { .film__play { width: 70px; height: 70px; } .film__label { top: calc(50% + 56px); } }
+.film__credit a { color: var(--cream); text-decoration: none; border-bottom: 1px solid rgba(245,239,228,.35); }
+.film__credit a:hover { border-color: var(--cream); }
