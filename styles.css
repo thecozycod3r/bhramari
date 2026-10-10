@@ -445,3 +445,13 @@ section[id] { scroll-margin-top: 64px; }
 .nav__links a { opacity: 1; font-size: .82rem; text-shadow: 0 1px 10px rgba(0,0,0,.45); }
 .nav.is-solid .nav__links a { text-shadow: none; opacity: .9; }
 .watermark { color: rgba(245, 239, 228, .09); }
+
+/* hero video pause control (everyone gets it; required for motion lasting over 5s) */
+.hero__pause {
+  position: absolute; left: var(--gut); bottom: 22px; z-index: 3;
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(20, 22, 17, .35); color: var(--cream);
+  border: 1px solid rgba(245, 239, 228, .45); cursor: pointer;
+  backdrop-filter: blur(6px); transition: background .3s, border-color .3s;
+}
+.hero__pause:hover { background: rgba(20, 22, 17, .55); border-color: var(--cream); }

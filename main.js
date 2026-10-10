@@ -128,7 +128,9 @@
   const hv = document.querySelector(".hero__video");
   if (hv) {
     const net = navigator.connection || {};
-    const skip = matchMedia("(prefers-reduced-motion: reduce)").matches || net.saveData || /2g|3g/.test(net.effectiveType || "");
+    // Reduced-motion users still get the gentle loop (scroll animations stay off for them) and,
+    // like everyone, a pause button. Only Data Saver and slow connections skip the video.
+    const skip = net.saveData || /2g|3g/.test(net.effectiveType || "");
     // ?debug shows on-screen why the hero video is or isn't playing (for testing on real phones)
     if (/debug/.test(location.search)) {
       const box = document.createElement("pre");
@@ -153,8 +155,25 @@
     if (skip) hv.remove();
     else {
       let inView = true;
+      const store = (v) => { try { v === null ? localStorage.removeItem("bh-hero-paused") : localStorage.setItem("bh-hero-paused", v); } catch {} };
+      let userPaused = (() => { try { return localStorage.getItem("bh-hero-paused") === "1"; } catch { return false; } })();
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "hero__pause";
+      const label = () => {
+        btn.setAttribute("aria-label", userPaused ? "Play background video" : "Pause background video");
+        btn.innerHTML = userPaused
+          ? '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>'
+          : '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>';
+      };
+      label();
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        userPaused = !userPaused; store(userPaused ? "1" : null); label();
+        if (userPaused) hv.pause(); else if (!hv.src) start(); else play();
+      });
+      document.querySelector(".hero").appendChild(btn);
       const on = () => { hv.classList.add("is-playing"); hv.parentElement.classList.add("is-playing"); };
-      const play = () => { if (hv.src && inView && !document.hidden) hv.play().catch(() => {}); };
+      const play = () => { if (hv.src && inView && !document.hidden && !userPaused) hv.play().then(on).catch(() => {}); };
       hv.addEventListener("playing", on);
       const pick = () =>
         matchMedia("(orientation: portrait) and (max-width: 900px)").matches ? hv.dataset.portrait
@@ -162,13 +181,14 @@
       const start = () => {
         // Safari/iOS ignores a play() issued in the same tick as a src change on a preload="none"
         // element, so mark it autoplay, load explicitly, and retry once data is ready.
+        if (userPaused) return; // paused by the visitor earlier: don't fetch the video until they press play
         hv.autoplay = true;
         hv.src = pick();
         hv.load();
         hv.addEventListener("canplay", play, { once: true });
         hv.play().then(on).catch(() => {
           // Blocked (e.g. iPhone Low Power Mode): start on the first tap or click anywhere
-          const kick = () => hv.play().then(on).catch(() => {});
+          const kick = () => { if (!userPaused) hv.play().then(on).catch(() => {}); };
           ["touchend", "click", "keydown"].forEach((ev) => document.addEventListener(ev, kick, { once: true, passive: true }));
         });
       };
