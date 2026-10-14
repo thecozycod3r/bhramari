@@ -257,6 +257,15 @@ address { font-style: normal; font: 400 1.35rem/1.5 var(--serif); margin-bottom:
 .foot p { margin: 0 0 4px; }
 .foot a { text-decoration: none; border-bottom: 1px solid rgba(245,239,228,.3); }
 .foot__small { font-size: .8rem; opacity: .7; }
+.foot__creditwrap { margin-top: 36px; padding-top: 26px; border-top: 1px solid rgba(245,239,228,.12); text-align: center; }
+.foot .foot__credit {
+  display: inline-flex; align-items: baseline; gap: .6em; padding: 10px 22px;
+  border: 1px solid rgba(233,184,146,.4); border-bottom: 1px solid rgba(233,184,146,.4); border-radius: 999px;
+  color: var(--cream); transition: background .3s var(--ease), border-color .3s var(--ease);
+}
+.foot .foot__credit:hover, .foot .foot__credit:focus-visible { background: rgba(233,184,146,.1); border-color: #e9b892; }
+.foot__credit-by { font: 400 .72rem/1 var(--sans); letter-spacing: .22em; text-transform: uppercase; opacity: .75; }
+.foot__credit-name { font: 400 1.75rem/1 var(--script); color: #e9b892; }
 
 /* floating whatsapp */
 .float-wa {
